@@ -2,6 +2,7 @@
 Program :- Attentional Blink Experiment
 Author:- Prakamya Khare
 
+
 """
 
 
@@ -76,6 +77,7 @@ def get_key(dist,value) :
 
 text1 = get_render("Welcome to the experiment :') press space to start the experiment")
 text2 = get_render("What was the second number?")
+path = "C:\\Attention Blink\\"
 
 
 pygame.display.set_caption("Attentional Blink")
@@ -88,8 +90,13 @@ alphas_dist = get_render_array('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 alphas = np.array(list(alphas_dist.keys()))
 flag1 = 1
 Data = []
-
+file = open(path+'data.csv','w')
+file.write("True Key,Response Key\n")
+file.close()
+format_data = ""
+d = 0
 while is_running :
+    file = open(path+'data.csv','a')
     screen.fill('black')
     if flag1 :
         rect = text1.get_rect()
@@ -118,11 +125,12 @@ while is_running :
     n1 = numbers[pos1]
     n2 = numbers[pos2]
     Data.append([numbers_dist[numbers[pos2]],0])
+    format_data += str(Data[d][0]) +','
     pos1,pos2 = np.random.randint(0,len(alphas)+2,size=(2))
     new_string = []
     insert_pos1 = insert_pos2 = False
     j = 0
-    d = 0
+    #d = 0
     for i in range(28) :
         if i == pos1 :
             insert_pos1 = True
@@ -166,15 +174,17 @@ while is_running :
                    print(numbers_dist[n2],'  ',numbers_dist[get_key(numbers_dist,value)])
                    if n2 == get_key(numbers_dist,value) :
                     print('true')
+                   
                    Data[d][1] = int(numbers_dist[n2])
+                   format_data += str(Data[d][1]) + '\n'
+                   file.write(format_data)
+                   format_data = ""
+                   file.close()
                    d = d + 1
                    break
- 
     pygame.display.flip()
     clock.tick(60)
     
 pygame.display.quit()
 pygame.quit()
 exit()
-
-            
